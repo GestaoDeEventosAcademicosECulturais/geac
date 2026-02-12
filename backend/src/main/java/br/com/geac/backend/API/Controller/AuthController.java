@@ -31,11 +31,12 @@ public class AuthController {
     public ResponseEntity<AuthResponseDTO> login(@RequestBody @Valid AuthRequestDTO data){
         return ResponseEntity.ok(authService.login(data));
     }
-}
-    
+
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
         authService.logout();
         return ResponseEntity.noContent().build();
     }
 }
+    
+   
