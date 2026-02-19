@@ -19,7 +19,7 @@ import java.util.UUID;
 public class EventController {
     private final EventService eventService;
 
-    @PostMapping
+    @PostMapping("/create")
     @PreAuthorize("hasRole('PROFESSOR')")
     public ResponseEntity<EventResponseDTO> createEvent(@RequestBody @Valid EventRequestDTO dto) {
         EventResponseDTO response = eventService.createEvent(dto);
