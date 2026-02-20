@@ -4,12 +4,14 @@ import {
   getCategories,
   getLocations,
   getRequirements,
+  getTags,
 } from "@/app/actions/domainActions";
 
 export default async function NewEventPage() {
   const categories = await getCategories();
   const locations = await getLocations();
   const requirements = await getRequirements();
+  const tags = await getTags();
 
   return (
     <RoleGuard allowedRoles={["PROFESSOR"]}>
@@ -29,6 +31,7 @@ export default async function NewEventPage() {
             categories={categories}
             locations={locations}
             requirements={requirements}
+            tags={tags}
           />
         </div>
       </div>

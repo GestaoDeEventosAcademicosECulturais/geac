@@ -9,11 +9,13 @@ interface CreateEventFormProps {
   categories: { id: number; name: string }[];
   locations: { id: number; name: string }[];
   requirements: { id: number; description: string }[];
+  tags: { id: number; name: string }[];
 }
 export default function CreateEventForm({
   categories = [],
   locations = [],
   requirements = [],
+  tags = [],
 }: Readonly<CreateEventFormProps>) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -28,6 +30,7 @@ export default function CreateEventForm({
     categoryId: categories[0]?.id.toString() || "1",
     locationId: locations[0]?.id.toString() || "1",
     requirementId: requirements[0]?.id.toString() || "1",
+    tags: [] as string[],
     workloadHours: "",
     maxCapacity: "",
     onlineLink: "",
@@ -48,6 +51,24 @@ export default function CreateEventForm({
     }
   };
 
+
+  const addTag = (id: string) => {
+    if (!formData.tags.includes(id)) {
+      setFormData({ ...formData, tags: [...formData.tags, id] });
+    }
+  };
+  const removeTag = (id: string) => {
+    setFormData({
+      ...formData,
+      tags: formData.tags.filter((tagId) => tagId !== id),
+    });
+  };
+  const removeAll = () => {
+    setFormData({
+      ...formData,
+      tags: []
+    })
+  }
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -67,6 +88,7 @@ export default function CreateEventForm({
         locationId: !formData.isOnline
           ? Number(formData.locationId)
           : undefined,
+        tags: formData.tags.map(Number)
       };
 
       const result = await createEventAction(payload);
@@ -186,7 +208,55 @@ export default function CreateEventForm({
           </select>
         </div>
       </div>
+      <div className="space-y-3">
+        <div className="flex justify-between p-1">
+          <label className=" p-1 text-sm font-medium dark:text-gray-200">
+            Tags do Evento
+          </label>
+          <button type="button" onClick={removeAll} className="p-1 text-sm bg-blue-600 font-medium dark:text-gray-200 hover:bg-blue-700 text-white rounded font-medium disabled:opacity-50 transition-colors"> 
+            Remover Todos
+          </button>
+        </div>
 
+
+        <div className="flex flex-wrap gap-2 min-h-[40px] p-2 border-2 border-dashed rounded-lg border-zinc-200 dark:border-zinc-700">
+          {formData.tags.length === 0 && (
+            <span className="text-sm text-gray-400">Nenhuma tag selecionada...</span>
+          )}
+          {formData.tags.map((tagId) => {
+            const tagInfo = tags.find((t) => t.id.toString() === tagId);
+            return (
+              <span
+                key={tagId}
+                className="flex items-center gap-1 px-3 py-1 bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 rounded-full text-sm font-medium animate-in fade-in zoom-in duration-200"
+              >
+                {tagInfo?.name}
+                <button
+                  type="button"
+                  onClick={() => removeTag(tagId)}
+                  className="hover:text-red-500 focus:outline-none"
+                >
+                  ×
+                </button>
+              </span>
+            );
+          })}
+        </div>
+        <div className="flex flex-wrap gap-2 mt-2">
+          {tags
+            .filter((tag) => !formData.tags.includes(tag.id.toString()))
+            .map((tag) => (
+              <button
+                key={tag.id}
+                type="button"
+                onClick={() => addTag(tag.id.toString())}
+                className="px-3 py-1 text-xs border rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-700 dark:border-zinc-600 transition-colors"
+              >
+                + {tag.name}
+              </button>
+            ))}
+        </div>
+      </div>
       <div className="flex items-center gap-2 mb-4">
         <input
           type="checkbox"
@@ -202,7 +272,7 @@ export default function CreateEventForm({
         >
           Este evento será Online
         </label>
-      </div>
+      </div >
 
       {formData.isOnline ? (
         <div>
