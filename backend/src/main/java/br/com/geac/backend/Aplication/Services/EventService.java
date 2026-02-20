@@ -2,12 +2,10 @@ package br.com.geac.backend.Aplication.Services;
 
 import br.com.geac.backend.Aplication.DTOs.Request.EventRequestDTO;
 import br.com.geac.backend.Aplication.DTOs.Reponse.EventResponseDTO;
-import br.com.geac.backend.Aplication.Mappers.EventMapper;
+import br.com.geac.backend.Aplication.Mappers.EventMapperr;
+import br.com.geac.backend.Aplication.Mappers.LocationMapper;
 import br.com.geac.backend.Domain.Entities.*;
-import br.com.geac.backend.Repositories.CategoryRepository;
-import br.com.geac.backend.Repositories.EventRepository;
-import br.com.geac.backend.Repositories.EventRequirementRepository;
-import br.com.geac.backend.Repositories.LocationRepository;
+import br.com.geac.backend.Repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,16 +13,18 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class EventService {
     private final EventRepository eventRepository;
-    private final EventMapper eventMapper;
     private final LocationRepository locationRepository;
     private final CategoryRepository categoryRepository;
     private final EventRequirementRepository eventRequirementRepository;
+    private final EventMapperr eventMapperr;
     // private final UserRepository userRepository;
 
     @Transactional
@@ -62,19 +62,35 @@ public class EventService {
         event.setRequirement(requirement);
 
         Event saved = eventRepository.save(event);
-        return eventMapper.toDTO(saved);
+
+        return eventMapperr.toResponseDTO(saved);
     }
 
     @Transactional(readOnly = true)
     public List<EventResponseDTO> getAllEvents() {
         List<Event> events = eventRepository.findAll();
-        return eventMapper.toDTOList(events);
+        return events.stream().map(eventMapperr::toResponseDTO).toList();
     }
 
     @Transactional(readOnly = true)
     public EventResponseDTO getEventById(UUID id) {
         Event event = eventRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Evento não encontrado com o ID: " + id));
-        return eventMapper.toDTO(event);
+        return eventMapperr.toResponseDTO(event);
     }
+
+    protected List<String> map(Set<Tag> tags) {
+        if (tags == null) return List.of();
+        return tags.stream().map(Tag::getName).toList();
+    }
+
+    protected List<String> resolveSpeakers(Event event) {
+        return List.of("Palestrante 1", "Palestrante 2"); //TODO: implementar no banco
+    }
+
+    protected List<String> resolveRequirementDescriptions(Event event) {
+        if (event.getRequirement() == null) return List.of();
+        return List.of(event.getRequirement().getDescription());
+    }
+
 }
