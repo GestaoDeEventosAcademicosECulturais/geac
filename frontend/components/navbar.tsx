@@ -1,182 +1,258 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { authService } from "@/lib/authService";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+
+// ✅ CONFIGURAÇÃO CENTRALIZADA - Mude aqui para adicionar/remover itens
+const NAV_CONFIG = {
+  public: [
+    { href: "/", label: "Início", icon: "🏠" },
+  ],
+  authenticated: [
+    { href: "/events", label: "Eventos", icon: "📅", roles: ["STUDENT", "PROFESSOR"] },
+    { href: "/meus-eventos", label: "Meus Eventos", icon: "⭐", roles: ["STUDENT", "PROFESSOR"] },
+    { href: "/certificados", label: "Certificados", icon: "🎓", roles: ["STUDENT", "PROFESSOR"] },
+  ],
+  professorOnly: [
+    { href: "/events/new", label: "Criar Evento", icon: "➕", roles: ["PROFESSOR"] },
+  ],
+};
 
 export function Navbar() {
-  const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState<any>(null);
+  const { isAuthenticated, user, logout } = useAuth();
   const [isLoggingOut, setIsLoggingOut] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
-    setMounted(true);
-    
-    // Verifica autenticação ao montar o componente
-    const checkAuth = () => {
-      try {
-        const isAuth = authService.isAuthenticated();
-        setIsAuthenticated(isAuth);
-        
-        if (isAuth) {
-          const currentUser = authService.getCurrentUser();
-          setUser(currentUser);
-        }
-      } catch (error) {
-        console.error('Erro ao verificar autenticação:', error);
-        setIsAuthenticated(false);
-        setUser(null);
+    setIsLoggingOut(false);
+    setIsMobileMenuOpen(false);
+    setIsProfileOpen(false);
+  }, [isAuthenticated, pathname]);
+
+  // Fecha dropdown ao clicar fora
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (profileRef.current && !profileRef.current.contains(event.target as Node)) {
+        setIsProfileOpen(false);
       }
     };
 
-    checkAuth();
+    if (isProfileOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
 
-    // Atualiza quando o localStorage muda (em outra aba, por exemplo)
-    const handleStorageChange = () => {
-      checkAuth();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    
     return () => {
-      window.removeEventListener('storage', handleStorageChange);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isProfileOpen]);
 
   const handleLogout = async () => {
-    const confirmLogout = window.confirm('Deseja realmente sair do sistema?');
-    
-    if (!confirmLogout) return;
-    
-    setIsLoggingOut(true);
-    
     try {
-      await authService.logout();
-      setIsAuthenticated(false);
-      setUser(null);
-      router.push('/signin');
-      router.refresh();
+      setIsLoggingOut(true);
+      await logout();
     } catch (error) {
-      console.error('Erro ao fazer logout:', error);
-      setIsAuthenticated(false);
-      setUser(null);
-      router.push('/signin');
+      console.error("Erro ao sair", error);
     } finally {
       setIsLoggingOut(false);
     }
   };
 
-  if (!mounted) {
-    return (
-      <nav className="bg-white dark:bg-zinc-900 shadow-lg border-b border-zinc-200 dark:border-zinc-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/" className="flex items-center">
-                <span className="text-2xl font-bold text-blue-600 dark:text-blue-500">
-                  GEAC
-                </span>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+  // ✅ Filtra itens baseado em autenticação e role
+  const getVisibleItems = () => {
+    if (!isAuthenticated) {
+      return NAV_CONFIG.public;
+    }
+
+    const baseItems = NAV_CONFIG.authenticated.filter(
+      item => !item.roles || item.roles.includes(user?.role || "")
     );
-  }
+
+    const professorItems = user?.role === "PROFESSOR" 
+      ? NAV_CONFIG.professorOnly 
+      : [];
+
+    return [...baseItems, ...professorItems];
+  };
+
+  const visibleItems = getVisibleItems();
+
+  // ✅ Verifica se link está ativo
+  const isActiveLink = (href: string) => {
+    if (href === "/") return pathname === "/";
+    return pathname.startsWith(href);
+  };
 
   return (
-    <nav className="bg-white dark:bg-zinc-900 shadow-lg border-b border-zinc-200 dark:border-zinc-800">
+    <nav className="bg-white dark:bg-zinc-900 shadow-lg border-b border-zinc-200 dark:border-zinc-800 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
+          {/* Logo */}
           <div className="flex items-center">
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
               <span className="text-2xl font-bold text-blue-600 dark:text-blue-500">
                 GEAC
               </span>
             </Link>
-            
-            {isAuthenticated && (
-              <div className="hidden md:ml-10 md:flex md:space-x-8">
+
+            {/* Desktop Navigation */}
+            <div className="hidden md:ml-10 md:flex md:space-x-4">
+              {visibleItems.map((item) => (
                 <Link
-                  href="/"
-                  className="text-zinc-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                  key={item.href}
+                  href={item.href}
+                  className={`
+                    px-3 py-2 rounded-md text-sm font-medium transition-all duration-200
+                    flex items-center gap-2
+                    ${
+                      isActiveLink(item.href)
+                        ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                        : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-blue-600 dark:hover:text-blue-400"
+                    }
+                  `}
                 >
-                  Eventos
+                  <span>{item.icon}</span>
+                  <span>{item.label}</span>
                 </Link>
-                <Link
-                  href="/meus-eventos"
-                  className="text-zinc-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Meus Eventos
-                </Link>
-                <Link
-                  href="/certificados"
-                  className="text-zinc-900 dark:text-zinc-100 hover:text-blue-600 dark:hover:text-blue-500 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-                >
-                  Certificados
-                </Link>
-              </div>
-            )}
+              ))}
+            </div>
           </div>
 
+          {/* Right side - User info & actions */}
           <div className="flex items-center gap-4">
             {isAuthenticated ? (
               <>
-                <div className="hidden md:block text-sm">
-                  <span className="text-zinc-700 dark:text-zinc-300">Olá, </span>
-                  <span className="font-semibold text-zinc-900 dark:text-white">
-                    {user?.name || 'Usuário'}
-                  </span>
+                {/* User info - Desktop with dropdown */}
+                <div className="hidden md:block relative" ref={profileRef}>
+                  <button
+                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                    className="flex items-center gap-3 px-4 py-2 bg-zinc-50 dark:bg-zinc-800 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-700 transition-colors"
+                  >
+                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold">
+                      {user?.name?.charAt(0).toUpperCase() || "U"}
+                    </div>
+                    <div className="text-sm text-left">
+                      <p className="font-semibold text-zinc-900 dark:text-white">
+                        {user?.name || "Usuário"}
+                      </p>
+                      <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                        {user?.role === "PROFESSOR" ? "Professor" : "Estudante"}
+                      </p>
+                    </div>
+                    <svg
+                      className={`w-4 h-4 text-zinc-500 transition-transform ${isProfileOpen ? "rotate-180" : ""}`}
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  {/* Dropdown */}
+                  {isProfileOpen && (
+                    <div className="absolute right-0 mt-2 w-72 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-zinc-200 dark:border-zinc-700 py-2 animate-in fade-in slide-in-from-top-2 duration-200">
+                      <div className="px-4 py-3 border-b border-zinc-200 dark:border-zinc-700">
+                        <p className="text-sm font-semibold text-zinc-900 dark:text-white">
+                          Informações do Perfil
+                        </p>
+                      </div>
+                      
+                      <div className="px-4 py-3 space-y-2">
+                        <div>
+                          <p className="text-xs text-zinc-500 dark:text-zinc-400">Nome</p>
+                          <p className="text-sm font-medium text-zinc-900 dark:text-white">
+                            {user?.name || "Não informado"}
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <p className="text-xs text-zinc-500 dark:text-zinc-400">Email</p>
+                          <p className="text-sm font-medium text-zinc-900 dark:text-white">
+                            {user?.email || "Não informado"}
+                          </p>
+                        </div>
+                        
+                        <div>
+                          <p className="text-xs text-zinc-500 dark:text-zinc-400">Tipo de Conta</p>
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                            user?.role === "PROFESSOR" 
+                              ? "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200"
+                              : "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                          }`}>
+                            {user?.role === "PROFESSOR" ? "👨‍🏫 Professor" : "🎓 Estudante"}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      <div className="border-t border-zinc-200 dark:border-zinc-700 mt-2 pt-2 px-2">
+                        {/*<Link
+                          href="/perfil"
+                          className="flex items-center gap-2 px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-700 rounded-md transition-colors"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          <span>⚙️</span>
+                          <span>Configurações</span>
+                        </Link>*/}
+                      </div>
+                    </div>
+                  )}
                 </div>
-                
+
                 <button
                   onClick={handleLogout}
                   disabled={isLoggingOut}
-                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  className="hidden md:flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  aria-label="Sair da conta"
                 >
                   {isLoggingOut ? (
                     <>
-                      <svg 
-                        className="animate-spin h-4 w-4" 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        fill="none" 
+                      <svg
+                        className="animate-spin h-4 w-4"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
                         viewBox="0 0 24 24"
                       >
-                        <circle 
-                          className="opacity-25" 
-                          cx="12" 
-                          cy="12" 
-                          r="10" 
-                          stroke="currentColor" 
+                        <circle
+                          className="opacity-25"
+                          cx="12"
+                          cy="12"
+                          r="10"
+                          stroke="currentColor"
                           strokeWidth="4"
                         />
-                        <path 
-                          className="opacity-75" 
-                          fill="currentColor" 
+                        <path
+                          className="opacity-75"
+                          fill="currentColor"
                           d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                         />
                       </svg>
-                      <span className="hidden sm:inline">Saindo...</span>
+                      <span>Saindo...</span>
                     </>
                   ) : (
                     <>
-                      <svg 
-                        xmlns="http://www.w3.org/2000/svg" 
-                        className="h-4 w-4" 
-                        viewBox="0 0 20 20" 
-                        fill="currentColor"
-                      >
-                        <path 
-                          fillRule="evenodd" 
-                          d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z" 
-                          clipRule="evenodd" 
-                        />
-                      </svg>
-                      <span className="hidden sm:inline">Sair</span>
+                      <span>Sair</span>
                     </>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                  className="md:hidden p-2 rounded-md text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  aria-label="Menu"
+                >
+                  {isMobileMenuOpen ? (
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  ) : (
+                    <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
                   )}
                 </button>
               </>
@@ -199,6 +275,68 @@ export function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu - Slide down */}
+      {isMobileMenuOpen && isAuthenticated && (
+        <div className="md:hidden border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 animate-in slide-in-from-top duration-200">
+          <div className="px-4 py-4 space-y-2">
+            {/* User info mobile */}
+            <div className="flex items-center gap-3 px-4 py-3 bg-zinc-50 dark:bg-zinc-800 rounded-lg mb-4">
+              <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-lg">
+                {user?.name?.charAt(0).toUpperCase() || "U"}
+              </div>
+              <div>
+                <p className="font-semibold text-zinc-900 dark:text-white">
+                  {user?.name || "Usuário"}
+                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  {user?.role === "PROFESSOR" ? "Professor" : "Estudante"}
+                </p>
+              </div>
+            </div>
+
+            {/* Mobile navigation links */}
+            {visibleItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`
+                  flex items-center gap-3 px-4 py-3 rounded-lg text-base font-medium transition-colors
+                  ${
+                    isActiveLink(item.href)
+                      ? "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400"
+                      : "text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800"
+                  }
+                `}
+              >
+                <span className="text-xl">{item.icon}</span>
+                <span>{item.label}</span>
+              </Link>
+            ))}
+
+            {/* Mobile logout button */}
+            <button
+              onClick={handleLogout}
+              disabled={isLoggingOut}
+              className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50 mt-4"
+            >
+              {isLoggingOut ? (
+                <>
+                  <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+                  </svg>
+                  <span>Saindo...</span>
+                </>
+              ) : (
+                <>
+                  <span>Sair</span>
+                </>
+              )}
+            </button>
+          </div>
+        </div>
+      )}
     </nav>
   );
 }
