@@ -1,4 +1,4 @@
-package br.com.geac.backend.API.Config;
+package br.com.geac.backend.api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

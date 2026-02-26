@@ -1,7 +1,7 @@
-package br.com.geac.backend.API.Controller;
+package br.com.geac.backend.api.controller;
 
-import br.com.geac.backend.Aplication.DTOs.Reponse.CategoryResponseDTO;
-import br.com.geac.backend.Repositories.CategoryRepository;
+import br.com.geac.backend.aplication.dtos.response.CategoryResponseDTO;
+import br.com.geac.backend.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

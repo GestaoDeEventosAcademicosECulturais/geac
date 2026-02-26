@@ -1,9 +1,9 @@
-package br.com.geac.backend.Aplication.Mappers;
+package br.com.geac.backend.aplication.mappers;
 
-import br.com.geac.backend.Aplication.DTOs.Reponse.RegisterResponseDTO;
-import br.com.geac.backend.Aplication.DTOs.Request.RegisterRequestDTO;
-import br.com.geac.backend.Domain.Entities.User;
-import br.com.geac.backend.Domain.Enums.Role;
+import br.com.geac.backend.aplication.dtos.response.RegisterResponseDTO;
+import br.com.geac.backend.aplication.dtos.request.RegisterRequestDTO;
+import br.com.geac.backend.domain.Entities.User;
+import br.com.geac.backend.domain.Enums.Role;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

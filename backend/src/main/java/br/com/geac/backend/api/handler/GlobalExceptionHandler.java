@@ -1,8 +1,8 @@
-package br.com.geac.backend.API.Handler;
+package br.com.geac.backend.api.handler;
 
-import br.com.geac.backend.Domain.Exceptions.ConflictException;
-import br.com.geac.backend.Domain.Exceptions.ConflictExceptionDetails;
-import br.com.geac.backend.Domain.Exceptions.ExceptionDetails;
+import br.com.geac.backend.domain.Exceptions.ConflictException;
+import br.com.geac.backend.domain.Exceptions.ConflictExceptionDetails;
+import br.com.geac.backend.domain.Exceptions.ExceptionDetails;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
-package br.com.geac.backend.Domain.Entities;
+package br.com.geac.backend.domain.Entities;
 
-import br.com.geac.backend.Domain.Enums.Role;
+import br.com.geac.backend.domain.Enums.Role;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

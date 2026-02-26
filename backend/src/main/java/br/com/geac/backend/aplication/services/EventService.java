@@ -1,12 +1,10 @@
-package br.com.geac.backend.Aplication.Services;
+package br.com.geac.backend.aplication.services;
 
-import br.com.geac.backend.Aplication.DTOs.Request.EventRequestDTO;
-import br.com.geac.backend.Aplication.DTOs.Reponse.EventResponseDTO;
-import br.com.geac.backend.Aplication.Mappers.EventMapperr;
-import br.com.geac.backend.Aplication.Mappers.LocationMapper;
-import br.com.geac.backend.Domain.Entities.*;
-import br.com.geac.backend.Repositories.*;
-import jakarta.validation.constraints.NotNull;
+import br.com.geac.backend.aplication.dtos.request.EventRequestDTO;
+import br.com.geac.backend.aplication.dtos.response.EventResponseDTO;
+import br.com.geac.backend.aplication.mappers.EventMapperr;
+import br.com.geac.backend.domain.Entities.*;
+import br.com.geac.backend.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

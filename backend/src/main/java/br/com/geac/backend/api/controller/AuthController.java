@@ -1,11 +1,11 @@
-package br.com.geac.backend.API.Controller;
+package br.com.geac.backend.api.controller;
 
 
-import br.com.geac.backend.Aplication.DTOs.Reponse.AuthResponseDTO;
-import br.com.geac.backend.Aplication.DTOs.Reponse.RegisterResponseDTO;
-import br.com.geac.backend.Aplication.DTOs.Request.AuthRequestDTO;
-import br.com.geac.backend.Aplication.DTOs.Request.RegisterRequestDTO;
-import br.com.geac.backend.Aplication.Services.AuthService;
+import br.com.geac.backend.aplication.dtos.response.AuthResponseDTO;
+import br.com.geac.backend.aplication.dtos.response.RegisterResponseDTO;
+import br.com.geac.backend.aplication.dtos.request.AuthRequestDTO;
+import br.com.geac.backend.aplication.dtos.request.RegisterRequestDTO;
+import br.com.geac.backend.aplication.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

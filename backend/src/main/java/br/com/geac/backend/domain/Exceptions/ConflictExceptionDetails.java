@@ -1,4 +1,4 @@
-package br.com.geac.backend.Domain.Exceptions;
+package br.com.geac.backend.domain.Exceptions;
 
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;

@@ -1,8 +1,8 @@
-package br.com.geac.backend.Aplication.Mappers;
+package br.com.geac.backend.aplication.mappers;
 
-import br.com.geac.backend.Aplication.DTOs.Reponse.EventResponseDTO;
-import br.com.geac.backend.Domain.Entities.Event;
-import br.com.geac.backend.Domain.Entities.Tag;
+import br.com.geac.backend.aplication.dtos.response.EventResponseDTO;
+import br.com.geac.backend.domain.Entities.Event;
+import br.com.geac.backend.domain.Entities.Tag;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
