@@ -1,0 +1,47 @@
+name: Backend CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'backend/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'backend/**'
+
+#define o diretorio padrao para a execucao dos comandos
+defaults:
+  run:
+    working-directory: ./backend
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout do código
+      uses: actions/checkout@v4
+
+    - name: Iniciar Base de Dados 
+      run: docker compose up -d
+
+    - name: Aguardar Base de Dados
+      run: sleep 5
+
+    - name: Setup JDK 25
+      uses: actions/setup-java@v4
+      with:
+        java-version: '25'
+        distribution: 'temurin' 
+        cache: 'maven'
+
+    - name: Dar permissão de execução para o Maven Wrapper
+      run: chmod +x mvnw
+
+    - name: Build com Maven (sem testes)
+      run: ./mvnw clean package -DskipTests
+
+    - name: Rodar Testes
+      run: ./mvnw test
