@@ -1,4 +1,4 @@
-package br.com.geac.backend.Aplication.DTOs.Reponse;
+package br.com.geac.backend.aplication.dtos.Reponse;
 
 public record CategoryResponseDTO(
         Integer id,

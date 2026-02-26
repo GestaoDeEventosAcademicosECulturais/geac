@@ -1,4 +1,4 @@
-package br.com.geac.backend.Aplication.DTOs.Reponse;
+package br.com.geac.backend.aplication.dtos.Reponse;
 
 
 //Verificar se ja vai redirecionar para o login ou ja logar direto
