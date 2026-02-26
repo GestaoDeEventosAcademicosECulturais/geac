@@ -1,4 +1,4 @@
-package br.com.geac.backend.domain.Exceptions;
+package br.com.geac.backend.domain.exceptions;
 
 public class EmailAlreadyExistsException extends ConflictException {
     public EmailAlreadyExistsException(String message) {

@@ -1,6 +1,6 @@
 package br.com.geac.backend.repositories;
 
-import br.com.geac.backend.domain.Entities.Location;
+import br.com.geac.backend.domain.entities.Location;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

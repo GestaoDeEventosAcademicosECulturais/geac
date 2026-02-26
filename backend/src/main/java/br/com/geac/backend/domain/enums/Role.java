@@ -1,4 +1,4 @@
-package br.com.geac.backend.domain.Enums;
+package br.com.geac.backend.domain.enums;
 
 public enum Role {
     STUDENT,

@@ -1,9 +1,8 @@
 package br.com.geac.backend.aplication.services;
-
+import br.com.geac.backend.domain.entities.*;
 import br.com.geac.backend.aplication.dtos.request.EventRequestDTO;
 import br.com.geac.backend.aplication.dtos.response.EventResponseDTO;
 import br.com.geac.backend.aplication.mappers.EventMapperr;
-import br.com.geac.backend.domain.Entities.*;
 import br.com.geac.backend.repositories.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
@@ -86,7 +85,8 @@ public class EventService {
     }
 
     protected List<String> resolveSpeakers(Event event) {
-        return List.of("Palestrante 1", "Palestrante 2"); //TODO: implementar no banco
+        System.out.println(event);
+        return List.of("Palestrante 1", "Palestrante 2");
     }
 
     protected List<String> resolveRequirementDescriptions(Event event) {

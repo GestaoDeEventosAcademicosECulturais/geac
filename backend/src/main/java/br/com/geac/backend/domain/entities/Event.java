@@ -1,4 +1,4 @@
-package br.com.geac.backend.domain.Entities;
+package br.com.geac.backend.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;

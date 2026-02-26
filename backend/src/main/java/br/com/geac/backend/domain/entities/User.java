@@ -1,7 +1,7 @@
-package br.com.geac.backend.domain.Entities;
-
-import br.com.geac.backend.domain.Enums.Role;
+package br.com.geac.backend.domain.entities;
 import jakarta.persistence.*;
+
+import br.com.geac.backend.domain.enums.Role;
 import lombok.Getter;
 import lombok.Setter;
 import org.jspecify.annotations.Nullable;
@@ -37,7 +37,7 @@ public class User implements UserDetails {
     private Role role;
 
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime created_at = LocalDateTime.now();
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

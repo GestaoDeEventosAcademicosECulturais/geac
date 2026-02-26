@@ -1,6 +1,6 @@
 package br.com.geac.backend.repositories;
 
-import br.com.geac.backend.domain.Entities.Event;
+import br.com.geac.backend.domain.entities.Event;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

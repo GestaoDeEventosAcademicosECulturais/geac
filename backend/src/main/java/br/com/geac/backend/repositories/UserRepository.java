@@ -1,6 +1,6 @@
 package br.com.geac.backend.repositories;
 
-import br.com.geac.backend.domain.Entities.User;
+import br.com.geac.backend.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Repository;

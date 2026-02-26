@@ -1,4 +1,4 @@
-package br.com.geac.backend.domain.Exceptions;
+package br.com.geac.backend.domain.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
