@@ -4,12 +4,11 @@ on:
   workflow_dispatch:
   push:
     branches: ["main"]
-    paths:
-      - "backend/**"
+    paths: ["backend/**"]
   pull_request:
+    types: [opened, synchronize, reopened]
     branches: ["main"]
-    paths:
-      - "backend/**"
+    paths: ["backend/**"]
 
 defaults:
   run:
@@ -22,27 +21,35 @@ jobs:
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
-       
-      - name: Iniciar Base de Dados
-        run: docker compose up -d
-
-      - name: Aguardar Base de Dados
-        run: sleep 5
+        with:
+          fetch-depth: 0 
 
       - name: Setup JDK 25
         uses: actions/setup-java@v4
         with:
           java-version: "25"
           distribution: "temurin"
-          cache: "maven"
+          cache: "maven" 
+
+      - name: Iniciar Base de Dados
+        run: docker compose up -d
+
+      - name: Aguardar Base de Dados
+        run: sleep 10 
 
       - name: Dar permissão de execução para o Maven Wrapper
         run: chmod +x mvnw
-        
-      - name: Build + Testes + Cobertura (JaCoCo)
-        run: ./mvnw clean verify
 
-      - name: Checar se jacoco.xml foi gerado
-        run: test -f target/site/jacoco/jacoco.xml
+      - name: Build, Testes e Sonar Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+        run: >
+          ./mvnw -B clean verify
+          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.projectKey=geac-backend
+          -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
+
       - name: Validar Relatório de Cobertura
         run: test -f target/site/jacoco/jacoco.xml
