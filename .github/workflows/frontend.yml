@@ -11,7 +11,7 @@ on:
     paths:
       - 'frontend/**'
 
-#define o diretorio padrao para a execucao dos comandos
+#define o diretorio padrao para a execucao dos comandoss
 defaults:
   run:
     working-directory: ./frontend
