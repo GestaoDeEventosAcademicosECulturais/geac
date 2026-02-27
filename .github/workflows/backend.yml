@@ -3,13 +3,13 @@ name: Backend CI
 on:
   workflow_dispatch:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
-      - 'backend/**'
+      - "backend/**"
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
-      - 'backend/**'
+      - "backend/**"
 
 #define o diretorio padrao para a execucao dos comandos
 defaults:
@@ -26,18 +26,18 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Iniciar Base de Dados 
-      run: docker compose up -d
+      - name: Iniciar Base de Dados
+        run: docker compose up -d
 
-    - name: Aguardar Base de Dados
-      run: sleep 5
+      - name: Aguardar Base de Dados
+        run: sleep 5
 
-    - name: Setup JDK 25
-      uses: actions/setup-java@v4
-      with:
-        java-version: '25'
-        distribution: 'temurin' 
-        cache: 'maven'
+      - name: Setup JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: "25"
+          distribution: "temurin"
+          cache: "maven"
 
     - name: Dar permissão de execução para o Maven Wrapper
       run: chmod +x mvnw
@@ -60,3 +60,11 @@ jobs:
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=geac-backend
+      - name: Dar permissão de execução para o Maven Wrapper
+        run: chmod +x mvnw
+
+      - name: Build + Testes + Cobertura (JaCoCo)
+        run: ./mvnw clean verify
+
+      - name: Checar se jacoco.xml foi gerado
+        run: test -f target/site/jacoco/jacoco.xml
