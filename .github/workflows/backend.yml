@@ -11,7 +11,6 @@ on:
     paths:
       - "backend/**"
 
-#define o diretorio padrao para a execucao dos comandos
 defaults:
   run:
     working-directory: ./backend
@@ -63,8 +62,15 @@ jobs:
       - name: Dar permissão de execução para o Maven Wrapper
         run: chmod +x mvnw
 
-      - name: Build + Testes + Cobertura (JaCoCo)
-        run: ./mvnw clean verify
+      - name: Build, Testes e SonarCloud
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: >
+          ./mvnw -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          -Dsonar.projectKey=geac-backed
+          -Dsonar.organization=gestaodeeventosacademicoseculturais
+          -Dsonar.host.url=https://sonarcloud.io
 
-      - name: Checar se jacoco.xml foi gerado
+      - name: Validar Relatório de Cobertura
         run: test -f target/site/jacoco/jacoco.xml
