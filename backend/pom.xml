@@ -32,6 +32,7 @@
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
+        <sonar.organization>geac</sonar.organization>
     </properties>
     <dependencies>
         <dependency>
@@ -92,6 +93,11 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.5.0.6356</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
