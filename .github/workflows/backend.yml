@@ -1,76 +1,49 @@
+---
 name: Backend CI
-
 on:
-  workflow_dispatch:
+  workflow_dispatch: null
   push:
-    branches: ["main"]
+    branches:
+      - main
     paths:
-      - "backend/**"
+      - backend/**
   pull_request:
-    branches: ["main"]
+    branches:
+      - main
     paths:
-      - "backend/**"
-
+      - backend/**
 defaults:
   run:
     working-directory: ./backend
-
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout do código
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
+      - name: Checkout do código
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Iniciar Base de Dados
         run: docker compose up -d
-
       - name: Aguardar Base de Dados
         run: sleep 5
-
       - name: Setup JDK 25
         uses: actions/setup-java@v4
         with:
           java-version: "25"
-          distribution: "temurin"
-          cache: "maven"
-
-    - name: Dar permissão de execução para o Maven Wrapper
-      run: chmod +x mvnw
-      
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v4
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
-        
-    - name: Cache Maven packages
-      uses: actions/cache@v4
-      with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
-          
-    - name: Build e Análise SonarCloud
-      env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=geac-backend
+          distribution: temurin
+          cache: maven
       - name: Dar permissão de execução para o Maven Wrapper
         run: chmod +x mvnw
-
       - name: Build, Testes e SonarCloud
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: >
-          ./mvnw -B clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+          ./mvnw -B clean verify
+          org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
           -Dsonar.projectKey=geac-backed
           -Dsonar.organization=gestaodeeventosacademicoseculturais
           -Dsonar.host.url=https://sonarcloud.io
-
       - name: Validar Relatório de Cobertura
         run: test -f target/site/jacoco/jacoco.xml
