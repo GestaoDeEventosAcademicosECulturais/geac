@@ -31,13 +31,12 @@
         <org.mapstruct.version>1.6.3</org.mapstruct.version>
         <maven.compiler.source>25</maven.compiler.source>
         <maven.compiler.target>25</maven.compiler.target>
-        <sonar.projectKey>geac-backed</sonar.projectKey>
-        <sonar.organization>gestaodeeventosacademicoseculturais</sonar.organization>
+        <sonar.projectKey>geac-backend</sonar.projectKey>
+        <sonar.organization>geac</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.projectBaseDir>backend</sonar.projectBaseDir>
         <sonar.sources>src/main/java</sonar.sources>
         <sonar.tests>src/test/java</sonar.tests>
-        <sonar.java.binaries>target/classes</sonar.java.binaries>
+        <sonar.exclusions>**/target/**</sonar.exclusions>
     </properties>
 	<dependencies>
         <dependency>
