@@ -1,8 +1,8 @@
-package br.com.geac.backend.API.Controller;
+package br.com.geac.backend.api.controller;
 
-import br.com.geac.backend.Aplication.DTOs.Request.EventRequestDTO;
-import br.com.geac.backend.Aplication.DTOs.Reponse.EventResponseDTO;
-import br.com.geac.backend.Aplication.Services.EventService;
+import br.com.geac.backend.aplication.dtos.request.EventRequestDTO;
+import br.com.geac.backend.aplication.dtos.response.EventResponseDTO;
+import br.com.geac.backend.aplication.services.EventService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

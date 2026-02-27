@@ -1,9 +1,8 @@
-package br.com.geac.backend.API.Handler;
+package br.com.geac.backend.api.handler;
 
-import br.com.geac.backend.Domain.Exceptions.ConflictException;
-import br.com.geac.backend.Domain.Exceptions.ConflictExceptionDetails;
-import br.com.geac.backend.Domain.Exceptions.ExceptionDetails;
-import org.jspecify.annotations.Nullable;
+import br.com.geac.backend.domain.exceptions.ConflictException;
+import br.com.geac.backend.domain.exceptions.ConflictExceptionDetails;
+import br.com.geac.backend.domain.exceptions.ExceptionDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -34,7 +33,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             );
     }
 @Override
-protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(
+protected  ResponseEntity<Object> handleMethodArgumentNotValid(
         MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 
     return new ResponseEntity<>(

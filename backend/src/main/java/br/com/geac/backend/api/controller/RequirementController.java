@@ -1,7 +1,7 @@
-package br.com.geac.backend.API.Controller;
+package br.com.geac.backend.api.controller;
 
-import br.com.geac.backend.Aplication.DTOs.Reponse.RequirementsResponseDTO;
-import br.com.geac.backend.Repositories.EventRequirementRepository;
+import br.com.geac.backend.aplication.dtos.response.RequirementsResponseDTO;
+import br.com.geac.backend.repositories.EventRequirementRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

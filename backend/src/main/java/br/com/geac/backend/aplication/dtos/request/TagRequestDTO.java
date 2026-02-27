@@ -1,4 +1,4 @@
-package br.com.geac.backend.Aplication.DTOs.Request;
+package br.com.geac.backend.aplication.dtos.request;
 
 import jakarta.validation.constraints.NotBlank;
 

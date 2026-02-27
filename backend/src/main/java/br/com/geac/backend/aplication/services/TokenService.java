@@ -1,6 +1,6 @@
-package br.com.geac.backend.Aplication.Services;
+package br.com.geac.backend.aplication.services;
 
-import br.com.geac.backend.Domain.Entities.User;
+import br.com.geac.backend.domain.entities.User;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;

@@ -1,4 +1,4 @@
-package br.com.geac.backend.Aplication.DTOs.Request;
+package br.com.geac.backend.aplication.dtos.request;
 
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.Min;
@@ -33,14 +33,14 @@ public record EventRequestDTO(
         @Min(value = 1, message = "A capacidade deve ser de no mínimo 1 pessoa")
         Integer maxCapacity,
 
-        @NotNull(message = "O ID da categoria é obrigatório") //TODO: somente 1 ou mais categorias? mandar id ou salvar caso nao esteja ?
+        @NotNull(message = "O ID da categoria é obrigatório")
         Integer categoryId,
 
-        @NotNull(message = "O requisito do evento é obrigatório") //TODO: aqui mandar uma lista, mas ver se será por id já existente ou criar
+        @NotNull(message = "O requisito do evento é obrigatório")
         Integer requirementId,
 
         @NotNull
-        Set<Integer> tags, //TODO: mesma coisa dos de cima, mas já ta implementado pros 2 casos
+        Set<Integer> tags,
 
         @NotNull
         //pode ser nulo, pois o evento pode ser online

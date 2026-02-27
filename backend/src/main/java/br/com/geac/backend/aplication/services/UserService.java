@@ -1,6 +1,6 @@
-package br.com.geac.backend.Aplication.Services;
+package br.com.geac.backend.aplication.services;
 
-import br.com.geac.backend.Repositories.UserRepository;
+import br.com.geac.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

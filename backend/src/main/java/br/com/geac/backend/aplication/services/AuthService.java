@@ -1,13 +1,13 @@
-package br.com.geac.backend.Aplication.Services;
+package br.com.geac.backend.aplication.services;
 
-import br.com.geac.backend.Aplication.DTOs.Reponse.AuthResponseDTO;
-import br.com.geac.backend.Aplication.DTOs.Request.AuthRequestDTO;
-import br.com.geac.backend.Aplication.DTOs.Reponse.RegisterResponseDTO;
-import br.com.geac.backend.Aplication.DTOs.Request.RegisterRequestDTO;
-import br.com.geac.backend.Aplication.Mappers.UserMapper;
-import br.com.geac.backend.Domain.Entities.User;
-import br.com.geac.backend.Domain.Exceptions.EmailAlreadyExistsException;
-import br.com.geac.backend.Repositories.UserRepository;
+import br.com.geac.backend.aplication.dtos.response.AuthResponseDTO;
+import br.com.geac.backend.aplication.dtos.request.AuthRequestDTO;
+import br.com.geac.backend.aplication.dtos.response.RegisterResponseDTO;
+import br.com.geac.backend.aplication.dtos.request.RegisterRequestDTO;
+import br.com.geac.backend.aplication.mappers.UserMapper;
+import br.com.geac.backend.domain.entities.User;
+import br.com.geac.backend.domain.exceptions.EmailAlreadyExistsException;
+import br.com.geac.backend.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,7 +48,7 @@ public class AuthService{
     
     public void logout() {
         // Em uma aplicação com sessões stateless (JWT), o logout é feito principalmente no cliente
-        // removendo o token. Este método pode ser estendido para implementar blacklist de tokens
+        // removendo o token. Este méthodo pode ser estendido para implementar blacklist de tokens
         // ou outras operações de limpeza necessárias
     }
 }
