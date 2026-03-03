@@ -1,4 +1,4 @@
-package br.com.geac.backend.repositories;
+package br.com.geac.backend.infrastructure.repositories;
 
 import br.com.geac.backend.domain.entities.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;

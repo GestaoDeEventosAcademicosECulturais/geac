@@ -7,7 +7,7 @@ import br.com.geac.backend.aplication.dtos.request.RegisterRequestDTO;
 import br.com.geac.backend.aplication.mappers.UserMapper;
 import br.com.geac.backend.domain.entities.User;
 import br.com.geac.backend.domain.exceptions.EmailAlreadyExistsException;
-import br.com.geac.backend.repositories.UserRepository;
+import br.com.geac.backend.infrastructure.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

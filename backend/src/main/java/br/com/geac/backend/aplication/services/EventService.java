@@ -1,17 +1,20 @@
 package br.com.geac.backend.aplication.services;
 
 import br.com.geac.backend.domain.entities.*;
-import br.com.geac.backend.repositories.*;
+import br.com.geac.backend.domain.enums.EventStatus;
+import br.com.geac.backend.infrastructure.repositories.*;
 import br.com.geac.backend.aplication.dtos.request.EventRequestDTO;
 import br.com.geac.backend.aplication.dtos.reponse.EventResponseDTO;
 import br.com.geac.backend.aplication.mappers.EventMapperr;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -53,7 +56,7 @@ public class EventService {
         event.setEndTime(dto.endTime());
         event.setWorkloadHours(dto.workloadHours());
         event.setMaxCapacity(dto.maxCapacity());
-        event.setStatus("ACTIVE");
+        event.setStatus(EventStatus.ACTIVE);
 
         event.setOrganizer(organizer);
         event.setCategory(category);
@@ -93,6 +96,10 @@ public class EventService {
     protected List<String> resolveRequirementDescriptions(Event event) {
         if (event.getRequirement() == null) return List.of();
         return List.of(event.getRequirement().getDescription());
+    }
+
+    public List<Event> getEventsBetween(LocalDateTime now, LocalDateTime eventDate) {
+        return eventRepository.findAllByStartTimeBetween(now, eventDate);
     }
 
 }

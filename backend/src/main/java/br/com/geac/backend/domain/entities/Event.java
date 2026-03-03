@@ -1,5 +1,6 @@
 package br.com.geac.backend.domain.entities;
 
+import br.com.geac.backend.domain.enums.EventStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -51,7 +52,7 @@ public class Event {
     private Integer maxCapacity;
 
     @Column(length = 20)
-    private String status;
+    private EventStatus status;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
