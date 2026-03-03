@@ -1,7 +1,7 @@
 package br.com.geac.backend.api.config;
 
 import br.com.geac.backend.aplication.services.TokenService;
-import br.com.geac.backend.repositories.UserRepository;
+import br.com.geac.backend.infrastructure.repositories.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

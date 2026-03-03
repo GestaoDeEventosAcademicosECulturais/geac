@@ -1,7 +1,7 @@
 package br.com.geac.backend.api.controller;
 
 import br.com.geac.backend.aplication.dtos.reponse.LocationResponseDTO;
-import br.com.geac.backend.repositories.LocationRepository;
+import br.com.geac.backend.infrastructure.repositories.LocationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

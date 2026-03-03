@@ -1,7 +1,6 @@
 package br.com.geac.backend.api.handler;
 
 import br.com.geac.backend.domain.exceptions.ConflictException;
-import br.com.geac.backend.domain.exceptions.ConflictExceptionDetails;
 import br.com.geac.backend.domain.exceptions.ExceptionDetails;
 import org.jspecify.annotations.Nullable;
 import org.springframework.http.HttpHeaders;
@@ -20,10 +19,10 @@ import java.time.LocalDateTime;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ConflictException.class)
-    public ResponseEntity<ConflictExceptionDetails> handleConflictException(ConflictException ex) {
+    public ResponseEntity<ExceptionDetails> handleConflictException(ConflictException ex) {
 
             return new ResponseEntity<>(
-                    ConflictExceptionDetails.builder()
+                    ExceptionDetails.builder()
                             .title("Conflict")
                             .status(HttpStatus.CONFLICT.value())
                             .timestamp(LocalDateTime.now())
