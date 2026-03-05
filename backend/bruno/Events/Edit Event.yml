@@ -1,0 +1,45 @@
+info:
+  name: Edit Event
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{baseUrl}}/events/e153c21a-d628-46ef-b838-b66d4758b966"
+  body:
+    type: json
+    data: |-
+      {
+        "title": "Test Event",
+        "description": "Happy Ending",
+        "startTime": "2026-12-30T23:59:59",
+        "endTime": "2026-12-31T23:59:59",
+        "categoryId": 1,
+        "requirementIds": [
+          1,
+          2,
+          3
+        ],
+        "locationId": 1,
+        "workloadHours": 2,
+        "maxCapacity": 1,
+        "onlineLink": "http://example.com",
+        "tags": [
+          1,
+          2,
+          3
+        ],
+        "speakers": [
+          1,
+          2,
+          3
+        ],
+        "orgId": "a5555555-5555-5555-5555-555555555555"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
